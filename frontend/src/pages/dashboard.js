@@ -3,10 +3,12 @@ import { Layout } from "@/components/layout";
 import { useAuth } from "@/hooks/use-auth";
 import { useMoods } from "@/hooks/use-moods";
 import { useDashboard } from "@/hooks/use-dashboard";
+import { useJournal } from "@/hooks/use-journal";
 import { StatsCard } from "@/components/stats-card";
 import { RiskBadge } from "@/components/risk-badge";
 import { MoodChart } from "@/components/mood-chart";
 import { Flame, SmilePlus, BookOpen, ExternalLink, Loader2 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
@@ -24,6 +26,9 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { moods } = useMoods();
   const { stats, isLoading } = useDashboard();
+  const { entries } = useJournal();
+
+  const recentEntries = entries.slice(0, 2);
 
   if (isLoading || !user || !stats) {
     return (
@@ -165,17 +170,17 @@ export default function Dashboard() {
             )
           )
           , React.createElement('div', { className: "grid gap-4 md:grid-cols-2 lg:grid-cols-3"   , __self: this, __source: {fileName: _jsxFileName, lineNumber: 165}}
-             /* We could pull recent journal entries here, for now placeholder */
-             , React.createElement('div', { className: "bg-card p-4 rounded-xl border border-border/50 hover:border-border transition-colors group cursor-pointer"        , __self: this, __source: {fileName: _jsxFileName, lineNumber: 167}}
-               , React.createElement('p', { className: "text-muted-foreground text-sm mb-2"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 168}}, "Today, 9:41 AM"  )
-               , React.createElement('p', { className: "font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 169}}, "Started the day feeling a bit anxious but meditation helped..."
-
-               )
-             )
-             , React.createElement('div', { className: "bg-card p-4 rounded-xl border border-border/50 hover:border-border transition-colors group cursor-pointer"        , __self: this, __source: {fileName: _jsxFileName, lineNumber: 173}}
-               , React.createElement('p', { className: "text-muted-foreground text-sm mb-2"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 174}}, "Yesterday, 8:30 PM"  )
-               , React.createElement('p', { className: "font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 175}}, "Had a great conversation with Sarah. Feeling grateful."
-
+             /* Recent journal entries */
+             , recentEntries.map((entry) =>
+               React.createElement('div', { 
+                 key: entry._id,
+                 className: "bg-card p-4 rounded-xl border border-border/50 hover:border-border transition-colors group cursor-pointer"        , __self: this, __source: {fileName: _jsxFileName, lineNumber: 167}}
+                 , React.createElement('p', { className: "text-muted-foreground text-sm mb-2"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 168}}
+                   , formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })
+                 )
+                 , React.createElement('p', { className: "font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors"    , __self: this, __source: {fileName: _jsxFileName, lineNumber: 169}}
+                   , entry.content
+                 )
                )
              )
              , React.createElement(Link, { href: "/journal", __self: this, __source: {fileName: _jsxFileName, lineNumber: 179}}

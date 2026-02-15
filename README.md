@@ -135,7 +135,7 @@ Create a `.env` file in the `backend` directory:
 
 ```env
 # MongoDB Connection
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/carecircle?retryWrites=true&w=majority
+MONGODB_URI=mongoDB URI Link
 
 # Server Configuration
 PORT=5000
